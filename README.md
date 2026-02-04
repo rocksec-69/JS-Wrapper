@@ -1,0 +1,206 @@
+
+# 🦅 JS Secret Scanner (Docker Edition)
+
+A powerful, threaded, and automated **CLI security tool** designed to aggressively scan JavaScript files for **secrets, API keys, tokens, credentials, and hidden endpoints**.
+
+Built for **security researchers and bug bounty hunters**, the JS Secret Scanner combines **active crawling**, **passive intelligence**, and **hybrid secret detection** into a single Dockerized workflow.
+
+---
+
+## 📖 About
+
+# JS Secret Scanner
+
+A powerful, threaded, and automated Command Line Interface (CLI) tool designed to aggressively scan JavaScript files  
+for secrets, API keys, tokens, and endpoints. It combines active crawling with passive discovery (Wayback Machine, AlienVault)  
+to find every JS file associated with a domain and uses a hybrid scanning engine (Custom Regex + Trufflehog)  
+to uncover sensitive information.
+
+---
+
+## 🚀 Features
+
+- ⚡ **Automated JS Discovery**  
+  Integrates Katana, Waybackurls, Gau, Subjs, and Hakrawler to find JavaScript files.
+
+- 🛠️ **Hybrid Secret Scanning**
+  - **Custom Regex Engine**: Over 200+ signatures for API keys and tokens (AWS, Google, Slack, Stripe, etc.).
+  - **Trufflehog Integration**: Uses Trufflehog for high-entropy verification and advanced secret detection.
+
+- 🕷️ **Content Extraction**  
+  Extracts URLs, API Endpoints, and S3 Buckets found inside JavaScript files.
+
+- 🧵 **Multi-Threaded**  
+  Blazing fast concurrent scanning with customizable thread counts.
+
+- 🛡️ **Proxy Support**  
+  Route traffic through HTTP/SOCKS proxies (Tor, Burp, etc.) to evade rate limits.
+
+---
+
+## 📦 Docker Image
+
+**Image Name**
+```
+
+rocksec/js-wrapper:latest
+
+````
+
+---
+
+## ⚡ Quick Reference
+
+| Flag | Long Flag | Description |
+|-----:|-----------|-------------|
+| `-d` | `--domain` | Scan a single domain or a specific `.js` URL |
+| `-l` | `--list` | Scan a list of domains or JS URLs from a file |
+| `-o` | `--output` | Save results to a file |
+| `-t` | `--threads` | Number of concurrent scans (default: `10`) |
+| `-p` | `--proxy` | Route traffic through a proxy |
+| `-st` | `--scan-type` | `regex`, `tools`, or `all` |
+
+---
+
+## 🛠️ Installation
+
+### Pull the Docker Image
+```bash
+docker pull rocksec/js-wrapper:latest
+````
+
+---
+
+## ▶️ Usage
+
+### 1️⃣ Basic Scan (Hello World)
+
+Scan a single domain:
+
+```bash
+docker run --rm js-wrapper -d example.com
+```
+
+Scan a single JavaScript file:
+
+```bash
+docker run --rm js-wrapper -d https://target.com/app.js
+```
+
+---
+
+### 2️⃣ Save Results to a File (IMPORTANT 💾)
+
+Docker containers are ephemeral.
+To **persist output**, you must map your current directory.
+
+#### Windows (Command Prompt)
+
+```bash
+docker run --rm -v %cd%:/app js-wrapper -d example.com -o report.txt
+```
+
+#### Linux / macOS / PowerShell
+
+```bash
+docker run --rm -v ${PWD}:/app js-wrapper -d example.com -o report.txt
+```
+
+📌 The output file will appear in your current directory.
+
+---
+
+### 3️⃣ Scan a List of Domains or List of JS Urls
+
+If you have a file called `targets.txt`:
+
+```txt
+example.com
+https://site.com/main.js
+```
+
+Run:
+
+#### Windows
+
+```bash
+docker run --rm -v %cd%:/app js-wrapper -l targets.txt -o results.txt
+```
+
+#### Linux / macOS
+
+```bash
+docker run --rm -v ${PWD}:/app js-wrapper -l targets.txt -o results.txt
+```
+
+---
+
+### 4️⃣ Bypass Rate Limits Using a Proxy 🛡️
+
+#### Using Tor (SOCKS5)
+
+*(Tor must be running on your host)*
+
+```bash
+docker run --rm \
+  -p host.docker.internal:9050:9050 \
+  js-wrapper \
+  -d example.com \
+  -p socks5://host.docker.internal:9050
+```
+
+---
+
+## ❓ Troubleshooting
+
+### ❌ `No such file or directory: targets.txt`
+
+**Cause**
+
+* Volume not mapped
+* File not in current directory
+
+**Fix**
+
+* Ensure `targets.txt` exists
+* Use:
+
+  ```bash
+  -v %cd%:/app
+  ```
+
+  or
+
+  ```bash
+  -v $(pwd):/app
+  ```
+
+---
+
+### 🎨 No Color Output
+
+Docker may disable TTY by default.
+
+**Fix**
+
+```bash
+docker run --rm -it js-wrapper -d example.com
+```
+
+---
+
+## 🧠 Tips
+
+* Increase threads (`-t 30`) for faster scans
+* Use proxies for aggressive targets
+* Scan both **domains** and **direct JS URLs**
+* Always save results using `-o`
+
+---
+
+## 🔥 Happy Hacking
+
+If you find secrets, endpoints, or credentials — **report responsibly**.
+
+```
+
