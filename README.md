@@ -66,13 +66,13 @@ docker pull rocksec/js-wrapper:latest
 Scan a single domain:
 
 ```bash
-docker run --rm js-wrapper -d example.com
+docker run --rm rocksec/js-wrapper -d example.com
 ```
 
 Scan a single JavaScript file:
 
 ```bash
-docker run --rm js-wrapper -d https://target.com/app.js
+docker run --rm rocksec/js-wrapper -d https://target.com/app.js
 ```
 
 ---
@@ -91,7 +91,7 @@ docker run --rm -v %cd%:/app js-wrapper -d example.com -o report.txt
 #### Linux / macOS / PowerShell
 
 ```bash
-docker run --rm -v ${PWD}:/app js-wrapper -d example.com -o report.txt
+docker run --rm -v ${PWD}:/app rocksec/js-wrapper -d example.com -o report.txt
 ```
 
 📌 The output file will appear in your current directory.
@@ -112,13 +112,13 @@ Run:
 #### Windows
 
 ```bash
-docker run --rm -v %cd%:/app js-wrapper -l targets.txt -o results.txt
+docker run --rm -v %cd%:/app rocksec/js-wrapper -l targets.txt -o results.txt
 ```
 
 #### Linux / macOS
 
 ```bash
-docker run --rm -v ${PWD}:/app js-wrapper -l targets.txt -o results.txt
+docker run --rm -v ${PWD}:/app rocksec/js-wrapper -l targets.txt -o results.txt
 ```
 
 ---
@@ -144,7 +144,7 @@ Docker may disable TTY by default.
 **Fix**
 
 ```bash
-docker run --rm -it js-wrapper -d example.com
+docker run --rm -it rocksec/js-wrapper -d example.com
 ```
 
 ---
