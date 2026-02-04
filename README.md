@@ -202,5 +202,13 @@ docker run --rm -it js-wrapper -d example.com
 
 If you find secrets, endpoints, or credentials — **report responsibly**.
 
+
+## ☕ Buy Me a Coffee
+
+If this project helps you, consider supporting it ❤️  
+
+[![Buy Me a Coffee](https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png)](https://buymeacoffee.com/rocksec)
+
+
 ```
 
