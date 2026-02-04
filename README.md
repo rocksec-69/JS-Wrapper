@@ -20,21 +20,11 @@ to uncover sensitive information.
 
 ## 🚀 Features
 
-- ⚡ **Automated JS Discovery**  
-  Integrates Katana, Waybackurls, Gau, Subjs, and Hakrawler to find JavaScript files.
-
-- 🛠️ **Hybrid Secret Scanning**
-  - **Custom Regex Engine**: Over 200+ signatures for API keys and tokens (AWS, Google, Slack, Stripe, etc.).
-  - **Trufflehog Integration**: Uses Trufflehog for high-entropy verification and advanced secret detection.
-
-- 🕷️ **Content Extraction**  
-  Extracts URLs, API Endpoints, and S3 Buckets found inside JavaScript files.
-
-- 🧵 **Multi-Threaded**  
-  Blazing fast concurrent scanning with customizable thread counts.
-
-- 🛡️ **Proxy Support**  
-  Route traffic through HTTP/SOCKS proxies (Tor, Burp, etc.) to evade rate limits.
+- ⚡ **Automated JS Discovery** – Finds JavaScript files using Katana, Waybackurls, Gau, Subjs, and Hakrawler.
+- 🛠️ **Hybrid Secret Scanning** – Detects secrets using 200+ custom regex patterns and Trufflehog.
+- 🕷️ **Content Extraction** – Extracts URLs, API endpoints, and S3 buckets from JavaScript files.
+- 🧵 **Multi-Threaded** – Fast concurrent scanning with configurable threads.
+- 🛡️ **Proxy Support** – Supports HTTP/SOCKS proxies (Tor, Burp, etc.) to bypass rate limits.
 
 ---
 
@@ -42,9 +32,7 @@ to uncover sensitive information.
 
 **Image Name**
 ```
-
 rocksec/js-wrapper:latest
-
 ````
 
 ---
