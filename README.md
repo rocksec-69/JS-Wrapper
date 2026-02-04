@@ -149,34 +149,6 @@ docker run --rm \
   -p socks5://host.docker.internal:9050
 ```
 
----
-
-## ❓ Troubleshooting
-
-### ❌ `No such file or directory: targets.txt`
-
-**Cause**
-
-* Volume not mapped
-* File not in current directory
-
-**Fix**
-
-* Ensure `targets.txt` exists
-* Use:
-
-  ```bash
-  -v %cd%:/app
-  ```
-
-  or
-
-  ```bash
-  -v $(pwd):/app
-  ```
-
----
-
 ### 🎨 No Color Output
 
 Docker may disable TTY by default.
