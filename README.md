@@ -85,7 +85,7 @@ To **persist output**, you must map your current directory.
 #### Windows (Command Prompt)
 
 ```bash
-docker run --rm -v %cd%:/app js-wrapper -d example.com -o report.txt
+docker run --rm -v %cd%:/app rocksec/js-wrapper -d example.com -o report.txt
 ```
 
 #### Linux / macOS / PowerShell
