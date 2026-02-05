@@ -158,6 +158,24 @@ docker run --rm -it rocksec/js-wrapper -d example.com
 
 ---
 
+## 📄 Output Format
+
+The tool generates a clean, pipe-separated report (`secrets_report.txt`):
+
+```text
+Domain: example.com | URL: https://example.com/app.js | Type: AWS Access Key | Secret: AKIAIOSFODNN7EXAMPLE
+Domain: example.com | URL: https://example.com/main.js | Type: EXTRACTED_ENDPOINT | Secret: /api/v1/users/login
+Domain: example.com | URL: https://example.com/vendor.js | Type: EXTRACTED_S3_BUCKET | Secret: my-private-bucket.s3.amazonaws.com
+```
+
+## ⚠️ Disclaimer
+
+This tool is for **educational purposes and authorized security testing only**. You must have permission to scan the target domains. The author is not responsible for any misuse or damage caused by this tool.
+
+---
+
+**Happy Hacking!** 🔥
+
 ## 🔥 Happy Hacking
 
 If you find secrets, endpoints, or credentials — **report responsibly**.
