@@ -1,3 +1,4 @@
+[![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-FFDD00?logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/rocksec)           [![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-FFDD00?logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/rocksec)
 
 # 🦅 JS Secret Scanner (Docker Edition)
 
@@ -9,31 +10,38 @@ Built for **security researchers and bug bounty hunters**, the JS Secret Scanner
 
 ## 📖 About
 
-# JS Secret Scanner
+**JS Secret Scanner** is a "Swiss Army Knife" for JavaScript reconnaissance. It doesn't just scan files you give it; it finds them for you. It combines massive subdomain enumeration with automated JS discovery (Wayback Machine, AlienVault, etc.) to uncover every JS file associated with a target.
 
-A powerful, threaded, and automated Command Line Interface (CLI) tool designed to aggressively scan JavaScript files  
-for secrets, API keys, tokens, and endpoints. It combines active crawling with passive discovery (Wayback Machine, AlienVault)  
-to find every JS file associated with a domain and uses a hybrid scanning engine (Custom Regex + Trufflehog)  
-to uncover sensitive information.
+Then, it uses a **hybrid scanning engine** (Custom Regex + Trufflehog) to find secrets, and automatically performs **advanced analysis** like unwrapping Source Maps (`.js.map`) to reveal the original TypeScript/source code.
 
 ---
 
 ## 🚀 Features
 
-- ⚡ **Automated JS Discovery** – Finds JavaScript files using Katana, Waybackurls, Gau, Subjs, and Hakrawler.
-- 🛠️ **Hybrid Secret Scanning** – Detects secrets using 200+ custom regex patterns and Trufflehog.
-- 🕷️ **Content Extraction** – Extracts URLs, API endpoints, and S3 buckets from JavaScript files.
-- 🧵 **Multi-Threaded** – Fast concurrent scanning with configurable threads.
-- 🛡️ **Proxy Support** – Supports HTTP/SOCKS proxies (Tor, Burp, etc.) to bypass rate limits.
+### 🔍 Discovery & reconnaissance
+- ⚡ **Automated JS Discovery** – Finds JavaScript files using 5 engines: **Katana, Waybackurls, Gau, Subjs, and Hakrawler**.
+- 🌍 **Massive Subdomain Enumeration** – **[NEW]** Optional `--subdomains` flag launches 11+ tools (Subfinder, Amass, Assetfinder, Findomain, MassDNS, etc.) to widen your scope before scanning.
 
----
+### 🛡️ Advanced Analysis (New!)
+- 🗺️ **Source Map Unpacker** – **[NEW]** Automatically detects `.js.map` files, downloads them, and extracts the **original unminified source code** (e.g., TypeScript, Webpack sources) to find secrets that are lost in the minified bundle.
+- 🕵️ **Obfuscation Detection** – **[NEW]** Detects if a file is hiding code using `eval()`, `atob()`, or packing techniques.
+- 🚨 **Risk Classification** – **[NEW]** Smartly tags findings with **Risk Levels**:
+    - **{Fore.RED}HIGH RISK{Style.RESET_ALL}**: Hardcoded Credentials (AWS/Stripe keys) or IDOR indicators (e.g., `/user/{id}`, `/admin/delete`).
+    - **MEDIUM/LOW**: General API endpoints or information disclosure.
+
+### 🛠️ Core Scanning
+- 🛠️ **Hybrid Secret Scanning** – Detects secrets using **200+ custom regex signatures** AND **Trufflehog** (high entropy checks).
+- 🕷️ **Content Extraction** – Extracts URLs, API endpoints, S3 buckets, and dependency versions.
+- 🧵 **Multi-Threaded** – Blazing fast concurrent scanning with configurable threads.
+- 🛡️ **Proxy Support** – Rotation support via HTTP/SOCKS proxies (Tor, Burp) to evade WAFs.
 
 ## 📦 Docker Image
 
 **Image Name**
-```
+```bash
 rocksec/js-wrapper:latest
-````
+```
+*(Supports both AMD64 and ARM64/Apple Silicon)*
 
 ---
 
@@ -44,6 +52,7 @@ rocksec/js-wrapper:latest
 | `-d` | `--domain` | Scan a single domain or a specific `.js` URL |
 | `-l` | `--list` | Scan a list of domains or JS URLs from a file |
 | `-o` | `--output` | Save results to a file |
+| `--subdomains` | **[NEW]** | Enable aggressive subdomain enumeration (Slow but powerful) |
 | `-t` | `--threads` | Number of concurrent scans (default: `10`) |
 | `-p` | `--proxy` | Route traffic through a proxy |
 | `-st` | `--scan-type` | `regex`, `tools`, or `all` |
@@ -55,118 +64,104 @@ rocksec/js-wrapper:latest
 ### Pull the Docker Image
 ```bash
 docker pull rocksec/js-wrapper:latest
-````
+```
 
 ---
 
 ## ▶️ Usage
 
+### 🌍 Standalone Subdomain Discovery
+If you only want to find subdomains without scanning for secrets, use the `--subs-only` flag. This runs all 11 enumeration tools, saves the results, and exits.
+
+**Command:**
+```bash
+docker run --rm -v $(pwd):/app js-wrapper -d example.com --subs-only -o subdomains.txt
+```
+
+---
+
 ### 1️⃣ Basic Scan (Hello World)
 
-Scan a single domain:
-
+Scan a single domain (Auto-finds JS files):
 ```bash
 docker run --rm rocksec/js-wrapper -d example.com
 ```
 
-Scan a single JavaScript file:
-
+Scan a single JavaScript file directly:
 ```bash
-docker run --rm rocksec/js-wrapper -d https://target.com/app.js
+docker run --rm rocksec/js-wrapper -d https://target.com/assets/app.chunk.js
 ```
 
 ---
 
-### 2️⃣ Save Results to a File (IMPORTANT 💾)
+### 2️⃣ Full Reckon Scan (Subdomains + JS) 🌍
 
-Docker containers are ephemeral.
-To **persist output**, you must map your current directory.
-
-#### Windows (Command Prompt)
+Use the new **`--subdomains`** flag to run the full suite (Subfinder, Amass, etc.) before scanning.
 
 ```bash
+docker run --rm rocksec/js-wrapper -d example.com --subdomains
+```
+
+---
+
+### 3️⃣ Save Results to a File (IMPORTANT 💾)
+
+Docker containers are ephemeral. To **persist output**, you must map your current directory using `-v`.
+
+#### Windows (Command Prompt)
+```cmd
 docker run --rm -v %cd%:/app rocksec/js-wrapper -d example.com -o report.txt
 ```
 
 #### Linux / macOS / PowerShell
-
 ```bash
-docker run --rm -v ${PWD}:/app rocksec/js-wrapper -d example.com -o report.txt
+docker run --rm -v $(pwd):/app rocksec/js-wrapper -d example.com -o report.txt
 ```
-
-📌 The output file will appear in your current directory.
+📌 *The `report.txt` file will appear in your current folder.*
 
 ---
 
-### 3️⃣ Scan a List of Domains or List of JS Urls
+### 4️⃣ Scan a List of Targets or List of JS URLs
 
-If you have a file called `targets.txt`:
-
+Create a file `targets.txt` in your current folder:
 ```txt
 example.com
+sub.test.com
 https://site.com/main.js
 ```
 
-Run:
-
-#### Windows
-
+Run the scan (remember to map the volume so Docker can see the file):
 ```bash
-docker run --rm -v %cd%:/app rocksec/js-wrapper -l targets.txt -o results.txt
-```
-
-#### Linux / macOS
-
-```bash
-docker run --rm -v ${PWD}:/app rocksec/js-wrapper -l targets.txt -o results.txt
+docker run --rm -v $(pwd):/app rocksec/js-wrapper -l targets.txt -o results.txt
 ```
 
 ---
 
-### 4️⃣ Bypass Rate Limits Using a Proxy 🛡️
+### 5️⃣ Bypass Rate Limits (Tor/Burp) 🛡️
 
-#### Using Tor (SOCKS5)
-
-*(Tor must be running on your host)*
+Use a proxy to hide your IP or debug traffic.
 
 ```bash
-docker run --rm \
-  -p host.docker.internal:9050:9050 \
-  js-wrapper \
-  -d example.com \
-  -p socks5://host.docker.internal:9050
+docker run --rm js-wrapper -d example.com -p socks5://127.0.0.1:9050
 ```
-
-### 🎨 No Color Output
-
-Docker may disable TTY by default.
-
-**Fix**
-
-```bash
-docker run --rm -it rocksec/js-wrapper -d example.com
-```
-
----
-
-## 🧠 Tips
-
-* Increase threads (`-t 30`) for faster scans
-* Use proxies for aggressive targets
-* Scan both **domains** and **direct JS URLs**
-* Always save results using `-o`
 
 ---
 
 ## 📄 Output Format
 
-The tool generates a clean, pipe-separated report (`secrets_report.txt`):
+The tool generates a clean, pipe-separated report (`secrets_report.txt`) with the new **Risk** and **Source** context:
 
 ```text
-Domain: example.com | URL: https://example.com/app.js | Type: AWS Access Key | Secret: AKIAIOSFODNN7EXAMPLE
-Domain: example.com | URL: https://example.com/main.js | Type: EXTRACTED_ENDPOINT | Secret: /api/v1/users/login
-Domain: example.com | URL: https://example.com/vendor.js | Type: EXTRACTED_S3_BUCKET | Secret: my-private-bucket.s3.amazonaws.com
+Domain: example.com | URL: https://example.com/app.js.map | Type: AWS Access Key | Secret: AKIAIOSFODNN7EXAMPLE | Risk: HIGH | Source: SOURCEMAP
+Domain: example.com | URL: https://example.com/main.js | Type: EXTRACTED_ENDPOINT | Secret: /api/v1/user/{id} | Risk: HIGH | Reason: Potential IDOR | Source: DIRECT
+Domain: sub.example.com | URL: https://example.com/vendor.js | Type: EXTRACTED_S3_BUCKET | Secret: my-bucket.s3.amazonaws.com | Risk: LOW | JS_OBFUSCATED: TRUE
 ```
+
+*   **Risk: HIGH**: Pay attention! Credentials or IDORs.
+*   **Source: SOURCEMAP**: This secret was found inside the *original* source code, not the minified file.
+*   **JS_OBFUSCATED**: This file is trying to hide something.
+
+---
 
 ## ⚠️ Disclaimer
 
@@ -174,18 +169,12 @@ This tool is for **educational purposes and authorized security testing only**. 
 
 ---
 
-**Happy Hacking!** 🔥
-
 ## 🔥 Happy Hacking
 
 If you find secrets, endpoints, or credentials — **report responsibly**.
 
-
 ## ☕ Buy Me a Coffee
 
-If this project helps you, consider supporting it ❤️  
+If this tool helps you find valid bugs, consider supporting the project! ❤️
 
 [![Buy Me a Coffee](https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png)](https://buymeacoffee.com/rocksec)
-
-```
-
