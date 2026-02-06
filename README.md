@@ -170,9 +170,9 @@ This tool is for **educational purposes and authorized security testing only**. 
 
 ---
 
-## 🔥 Happy Hacking
-
 If you find secrets, endpoints, or credentials — **report responsibly**.
+
+## 🔥 Happy Hacking
 
 ## ☕ Buy Me a Coffee
 
