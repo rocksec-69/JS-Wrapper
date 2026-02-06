@@ -19,8 +19,8 @@ Then, it uses a **hybrid scanning engine** (Custom Regex + Trufflehog) to find s
 ## 🚀 Features
 
 ### 🔍 Discovery & reconnaissance
-- ⚡ **Automated JS Discovery** – Finds JavaScript files using 5 engines: **Katana, Waybackurls, Gau, Subjs, and Hakrawler**.
-- 🌍 **Massive Subdomain Enumeration** – **[NEW]** Optional `--subdomains` flag launches 11+ tools (Subfinder, Amass, Assetfinder, Findomain, MassDNS, etc.) to widen your scope before scanning.
+- ⚡ **Automated JS Discovery** – Finds JavaScript files using 5 engines.
+- 🌍 **Massive Subdomain Enumeration** – **[NEW]** Optional `--subdomains` flag launches 11+ tools to widen your scope before scanning.
 
 ### 🛡️ Advanced Analysis (New!)
 - 🗺️ **Source Map Unpacker** – **[NEW]** Automatically detects `.js.map` files, downloads them, and extracts the **original unminified source code** (e.g., TypeScript, Webpack sources) to find secrets that are lost in the minified bundle.
